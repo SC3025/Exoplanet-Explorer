@@ -1,0 +1,12 @@
+matplotlib
+seaborn
+numpy
+streamlit
+panda
+io
+base64
+lightkurve
+warnings
+joblib
+itertools
+threading
