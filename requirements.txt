@@ -10,3 +10,6 @@ warnings
 joblib
 itertools
 threading
+lightkurve 
+joblib
+seaborn
