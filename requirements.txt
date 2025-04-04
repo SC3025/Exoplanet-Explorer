@@ -3,6 +3,7 @@ seaborn
 numpy
 streamlit
 panda
+PIL
 io
 base64
 lightkurve
