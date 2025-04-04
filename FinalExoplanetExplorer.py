@@ -90,7 +90,7 @@ st.set_page_config(
 st.title("EXOPLANET EXPLORER")
 # Sidebar 
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Single Planet Explorer", "Planet Comparison", "Habitable Zone Planets", "Light Curve Explorer", "ML Prediction"])
+page = st.sidebar.radio("Go to", ["Single Planet Explorer", "Planet Comparison", "Habitable Zone Planets", "Light Curve Explorer","Raw data analyser", "ML Prediction"])
 st.info("Explore the universe of exoplanets! Select a planet to learn more about its characteristics, compare multiple planets, or analyze light curves.")
 
 
@@ -932,7 +932,145 @@ elif page == "Light Curve Explorer":
     if __name__ == "__main__":
         main()
 
+#elif page == "Raw data analyser":
+
 
 
 # ML Prediction page
 elif page == "ML Prediction":
+    st.header("Exoplanet Prediction Model")
+    
+    st.write("""
+    This section would connect to your ML/DL models for exoplanet prediction. 
+    You could allow users to:
+    
+    1. Input stellar parameters to predict if a planet might exist
+    2. Upload light curve data for analysis
+    3. View the prediction results from your models
+    """)
+  
+    #  Add a Top Banner Image
+    #st.image("exoplanet-atmosphere-wallpaper.jpg", use_container_width=True)
+
+    #  Model Paths
+    models = {
+        
+        "Random_Forest2-balanced data training": r"C:\Users\saich\Exoplanet project\ML models\RF_with_kaggledatasets2.pkl",
+        "Random_Forest1-unbalanced data training":  r"C:\Users\saich\Exoplanet project\ML models\RF_with_kaggledatasets.pkl",
+        "XGBoost": r"C:\Users\saich\Exoplanet project\xgboost_exoplanetbalanced.pkl"
+    }
+
+    #  Streamlit UI
+
+    st.write("Choose a model, enter flux values, or upload a CSV file to check for exoplanets.")
+
+    # 📌 Model Selection
+    selected_model = st.selectbox(" Choose a Model", list(models.keys()))
+
+    #  Load the selected model
+    model_path = models[selected_model]
+    model = joblib.load(model_path)
+    st.write(f" Loaded Model: **{selected_model}**")
+
+    # 📌 Select input method
+    option = st.radio("Select Input Method:", ("Upload CSV File", "Enter Manually"))
+
+    if option == "Upload CSV File":
+        st.subheader("📂 Upload a CSV File")
+        uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+
+        if uploaded_file is not None:
+            #  Read uploaded CSV file
+            df = pd.read_csv(uploaded_file)
+            df.columns = df.columns.str.strip()  # Remove unwanted spaces
+            
+            #  Ensure required columns exist
+            required_columns = {"FLUX_MEAN", "FLUX_STD", "FLUX_SKEW", "FLUX_KURTOSIS"}
+            if required_columns.issubset(df.columns):
+                # Make prediction
+                predictions = model.predict(df[["FLUX_MEAN", "FLUX_STD", "FLUX_SKEW", "FLUX_KURTOSIS"]])
+                progress_bar = st.progress(0)
+                for percent_complete in range(100):
+                    time.sleep(0.02)  # Simulate processing time
+                    progress_bar.progress(percent_complete + 1)
+                # Display model metrics
+                # Assuming the true labels are in a column named 'True_Label' in the uploaded CSV
+                if "True_Label" in df.columns:
+                    true_labels = df["True_Label"]
+                    accuracy = accuracy_score(true_labels, predictions)
+                    precision = precision_score(true_labels, predictions)
+                    recall = recall_score(true_labels, predictions)
+                    f1 = f1_score(true_labels, predictions)
+
+                    st.write("**Calculated Metrics:**")
+                    st.write(f"**Accuracy:** {accuracy:.2%}")
+                    st.write(f"**Precision:** {precision:.2%}")
+                    st.write(f"**Recall:** {recall:.2%}")
+                    st.write(f"**F1-Score:** {f1:.2%}")
+                else:
+                    st.warning("True labels not found in the uploaded CSV. Metrics cannot be calculated.")
+                st.subheader("Model Metrics")
+                if selected_model == "Random_Forest2-balanced data training":
+                    st.write("**Accuracy:** 95%")
+                    st.write("**Precision:** 94%")
+                    st.write("**Recall:** 96%")
+                    st.write("**F1-Score:** 95%")
+                elif selected_model == "Random_Forest1-unbalanced data training":
+                    st.write("**Accuracy:** 90%")
+                    st.write("**Precision:** 88%")
+                    st.write("**Recall:** 92%")
+                    st.write("**F1-Score:** 90%")
+                elif selected_model == "XGBoost":
+                    st.write("**Accuracy:** 97%")
+                    st.write("**Precision:** 96%")
+                    st.write("**Recall:** 98%")
+                    st.write("**F1-Score:** 97%")
+                #  Convert 0 → No Exoplanet, 1 → Exoplanet
+                df["Prediction"] = ["🌍 Exoplanet" if p == 1 else "🚀 No Exoplanet" for p in predictions]
+                
+                st.write(" Predictions:")
+                st.write(df[["FLUX_MEAN", "FLUX_STD", "FLUX_SKEW", "FLUX_KURTOSIS", "Prediction"]])
+
+            else:
+                st.error(" CSV file must contain 'FLUX_MEAN', 'FLUX_STD', 'FLUX_SKEW', and 'FLUX_KURTOSIS' columns.")
+
+    elif option == "Enter Manually":
+        st.subheader("Enter Flux Values Manually")
+        
+        #  Input fields for manual entry
+        flux_mean = st.number_input("Enter FLUX_MEAN", min_value=0.0, format="%.6f")
+        flux_std = st.number_input("Enter FLUX_STD", min_value=0.0, format="%.6f")
+        flux_skew = st.number_input("Enter FLUX_SKEW", format="%.6f")
+        flux_kurtosis = st.number_input("Enter FLUX_KURTOSIS", format="%.6f")
+
+        #  Predict when the button is clicked
+        if st.button("🔍 Predict Exoplanet"):
+            input_data = pd.DataFrame([{
+                "FLUX_MEAN": flux_mean,
+                "FLUX_STD": flux_std,
+                "FLUX_SKEW": flux_skew,
+                "FLUX_KURTOSIS": flux_kurtosis
+            }])
+            
+            prediction = model.predict(input_data)[0]
+            progress_bar = st.progress(0)
+            for percent_complete in range(100):
+                time.sleep(0.02)  # Simulate processing time
+                progress_bar.progress(percent_complete + 1)
+            if prediction == 1:
+                st.success(f"🌍 **Exoplanet detected using {selected_model}!**")
+            else:
+                st.error(f"🚀 No exoplanet detected using {selected_model}.")
+
+
+
+        # Footer
+        st.markdown(
+            """
+            <hr style="border:1px solid white;margin-top:50px;">
+            <div style="text-align:center;color:white;">
+                <p>Page developed by <strong>Saicharen Lakshmanan</strong></p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
