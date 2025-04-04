@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
-import requests
+
 from io import BytesIO
 import base64
 import lightkurve as lk
@@ -13,8 +13,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 import time
-from itertools import cycle
-import threading
+
+
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from matplotlib.colors import LinearSegmentedColormap
 from astropy.timeseries import BoxLeastSquares, LombScargle
@@ -113,7 +113,7 @@ with st.sidebar:
         use_default_bg = st.checkbox("Use default space background")
         if use_default_bg:
             # Path to the default background image
-            default_bg_path = r"C:\Users\saich\Exoplanet project\exoplanet-atmosphere-clouds-stars-moon-wallpaper-preview.jpg"
+            default_bg_path = r"C:\Users\saich\Exoplanet project\movies-gargantua-black-holes-artwork-wallpaper-preview.jpg"
             
             # Set the background with the default image
             with open(default_bg_path, "rb") as f:
@@ -1064,15 +1064,15 @@ elif page == "ML Prediction":
 
 
 
-        # Footer
-        st.markdown(
-            """
-            <hr style="border:1px solid white;margin-top:50px;">
-            <div style="text-align:center;color:white;">
-                <p>Page developed by <strong>Saicharen Lakshmanan</strong></p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        
-st.message('hello')
+
+
+
+
+
+
+st.write('-----------------------------------------------------------------')
+
+
+st.write("Page developed by : Saicharen Lakshmanan")
+    
+         
