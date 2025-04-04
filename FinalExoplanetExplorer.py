@@ -18,7 +18,7 @@ import time
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from matplotlib.colors import LinearSegmentedColormap
 from astropy.timeseries import BoxLeastSquares, LombScargle
-
+import scipy.stats as stats
 
 
 warnings.filterwarnings('ignore')
@@ -932,7 +932,58 @@ elif page == "Light Curve Explorer":
     if __name__ == "__main__":
         main()
 
-#elif page == "Raw data analyser":
+elif page == "Raw data analyser":
+    st.title("Raw data analyser")
+    st.write("Upload a CSV file containing `Time` and `Flux` columns.")
+
+    # File uploader
+    uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+
+    if uploaded_file is not None:
+        # Load data
+        data = pd.read_csv(uploaded_file)
+
+        # Check for required columns
+        if {"time","flux"}.issubset(data.columns):
+            time = data["time"]
+            flux = data["flux"]
+
+            # Raw Light Curve Plot
+            fig, ax = plt.subplots(figsize=(8, 4))
+            ax.plot(time, flux, 'b-', alpha=0.7)
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Flux")
+            ax.set_title("Raw Light Curve")
+            ax.grid(True)
+            st.pyplot(fig)
+
+            # Normalize Flux
+            flux_norm = (flux - flux.mean()) / flux.std()
+
+            # Normalized Light Curve Plot
+            fig, ax = plt.subplots(figsize=(8, 4))
+            ax.plot(time, flux_norm, 'r-', alpha=0.7)
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Normalized Flux")
+            ax.set_title("Normalized Light Curve")
+            ax.grid(True)
+            st.pyplot(fig)
+
+            # Compute Statistics
+            mean_flux = flux.mean()
+            std_flux = flux.std()
+            skew_flux = stats.skew(flux)
+            kurtosis_flux = stats.kurtosis(flux)
+
+            # Display statistics
+            st.subheader("Statistics")
+            st.write(f"**Mean Flux:** {mean_flux:.4f}")
+            st.write(f"**Standard Deviation:** {std_flux:.4f}")
+            st.write(f"**Skewness:** {skew_flux:.4f}")
+            st.write(f"**Kurtosis:** {kurtosis_flux:.4f}")
+
+        else:
+            st.error("CSV must contain 'Time' and 'Flux' columns!")
 
 
 
