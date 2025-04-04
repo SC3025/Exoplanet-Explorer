@@ -13,3 +13,4 @@ threading
 lightkurve 
 joblib
 seaborn
+time
