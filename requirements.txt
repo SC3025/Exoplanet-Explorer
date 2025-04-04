@@ -14,3 +14,5 @@ lightkurve
 joblib
 seaborn
 time
+astropy
+sklearn
