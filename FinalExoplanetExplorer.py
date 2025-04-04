@@ -87,7 +87,7 @@ st.set_page_config(
 )
 
 # Title and introduction
-st.title("EXOPLANET EXPLORER")
+st.title("ADVANCED EXOPLANET EXPLORER")
 # Sidebar 
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Single Planet Explorer", "Planet Comparison", "Habitable Zone Planets", "Light Curve Explorer","Raw data analyser", "ML Prediction"])
@@ -113,7 +113,7 @@ with st.sidebar:
         use_default_bg = st.checkbox("Use default space background")
         if use_default_bg:
             # Path to the default background image
-            default_bg_path = r"C:\Users\saich\Exoplanet project\movies-gargantua-black-holes-artwork-wallpaper-preview.jpg"
+            default_bg_path = r"C:\Users\saich\Downloads\exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
             
             # Set the background with the default image
             with open(default_bg_path, "rb") as f:
@@ -788,6 +788,18 @@ elif page == "Light Curve Explorer":
                 time.sleep(0.02)
                 progress_bar.progress(percent_complete + 1)
             lc = lk.search_lightcurve(target_id, mission=mission).download()
+            # Convert the light curve data into a CSV format for downloading
+            if lc is not None:
+                csv_data = lc.to_pandas()
+                csv_buffer = BytesIO()
+                csv_data.to_csv(csv_buffer, index=False)
+                csv_buffer.seek(0)
+                st.download_button(
+                    label="Download Light Curve Data as CSV",
+                    data=csv_buffer,
+                    file_name=f"{target_id}_light_curve.csv",
+                    mime="text/csv"
+                )
             for percent_complete in range(50, 100):  # Complete progress
                 time.sleep(0.02)
                 progress_bar.progress(percent_complete + 1)
