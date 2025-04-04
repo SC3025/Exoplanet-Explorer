@@ -1074,3 +1074,5 @@ elif page == "ML Prediction":
             """,
             unsafe_allow_html=True
         )
+        
+st.message('hello')
