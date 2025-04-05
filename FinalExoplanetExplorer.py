@@ -116,7 +116,7 @@ with st.sidebar:
             default_bg_path = r"C:\Users\saich\Exoplanet project\exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
             
             # Set the background with the default image
-            with open(default_bg_path, "rb") as f:
+            with open(default_bg_path,"rb") as f:
                 bg_data = BytesIO(f.read())
             set_background(bg_data)
             st.success("Default background image set!")
