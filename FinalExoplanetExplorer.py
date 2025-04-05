@@ -113,7 +113,7 @@ with st.sidebar:
         use_default_bg = st.checkbox("Use default space background")
         if use_default_bg:
             # Path to the default background image
-            default_bg_path = r"C:\Users\saich\Downloads\exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
+            default_bg_path = r"C:\Users\saich\Exoplanet project\exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
             
             # Set the background with the default image
             with open(default_bg_path, "rb") as f:
