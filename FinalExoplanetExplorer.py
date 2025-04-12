@@ -101,25 +101,24 @@ st.info("Explore the universe of exoplanets! Select a planet to learn more about
 
 
 
+
+
 with st.sidebar:
     st.header("App Settings")
     uploaded_bg = st.file_uploader("Upload Background Image", type=["png", "jpg", "jpeg"])
+
     if uploaded_bg is not None:
         # Set the background with the uploaded image
         set_background(uploaded_bg)
         st.success("Background image set!")
     else:
-        # Default background option
-        use_default_bg = st.checkbox("Use default space background")
-        if use_default_bg:
-            # Path to the default background image
-            default_bg_path = r"C:\Users\saich\Exoplanet project\exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
-            
-            # Set the background with the default image
-            with open(default_bg_path,"rb") as f:
-                bg_data = BytesIO(f.read())
-            set_background(bg_data)
-            st.success("Default background image set!")
+        # Automatically use the default background image
+        default_bg_path = r"exploration_of_an_astronaut-wallpaper-1920x1080.jpg"
+        with open(default_bg_path, "rb") as f:
+            bg_data = BytesIO(f.read())
+        set_background(bg_data)
+        st.success("Default background image set!")
+
 
 
 #-------------------------------------------------------------------------------
