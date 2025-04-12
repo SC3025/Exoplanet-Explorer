@@ -23,7 +23,7 @@ import scipy.stats as stats
 
 warnings.filterwarnings('ignore')
 
-# Function to set background image
+
 def set_background(image_file):
     """
     This function sets the background of a Streamlit app to an image file.
@@ -79,14 +79,14 @@ def set_background(image_file):
     
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# Page config
+
 st.set_page_config(
     page_title="EXOPLANET EXPLORER",
     page_icon="🪐",
     layout="wide"
 )
 
-# Title and introduction
+
 st.title("ADVANCED EXOPLANET EXPLORER")
 # Sidebar 
 st.sidebar.title("Navigation")
@@ -172,7 +172,7 @@ def load_exoplanet_data():
     }
     return pd.DataFrame(data)
 
-# Function to fetch and plot light curve data
+
 @st.cache_data
 def fetch_light_curve(target_name, mission=None, sector=None, quarter=None):
     """
@@ -198,7 +198,7 @@ def fetch_light_curve(target_name, mission=None, sector=None, quarter=None):
         st.error(f"Error fetching light curve: {str(e)}")
         return None
 
-# Enhanced function to analyze light curves for transits
+
 def analyze_light_curve(lc, period=None):
     """
     Analyze a light curve for periodic signals that might indicate transits
@@ -1018,9 +1018,9 @@ elif page == "ML Prediction":
     #  Model Paths
     models = {
         
-        "Random_Forest2-balanced data training": r"C:\Users\saich\Exoplanet project\ML models\RF_with_kaggledatasets2.pkl",
-        "Random_Forest1-unbalanced data training":  r"C:\Users\saich\Exoplanet project\ML models\RF_with_kaggledatasets.pkl",
-        "XGBoost": r"C:\Users\saich\Exoplanet project\xgboost_exoplanetbalanced.pkl"
+        "Random_Forest2-balanced data training": r"RF_with_kaggledatasets2.pkl",
+        "Random_Forest1-unbalanced data training":  r"RF_with_kaggledatasets.pkl"
+        #"XGBoost": r"C:\Users\saich\Exoplanet project\xgboost_exoplanetbalanced.pkl"
     }
 
     #  Streamlit UI
@@ -1089,7 +1089,7 @@ elif page == "ML Prediction":
                     st.write("**Recall:** 98%")
                     st.write("**F1-Score:** 97%")
                 #  Convert 0 → No Exoplanet, 1 → Exoplanet
-                df["Prediction"] = ["🌍 Exoplanet" if p == 1 else "🚀 No Exoplanet" for p in predictions]
+                df["Prediction"] = [" Exoplanet" if p == 1 else " No Exoplanet" for p in predictions]
                 
                 st.write(" Predictions:")
                 st.write(df[["FLUX_MEAN", "FLUX_STD", "FLUX_SKEW", "FLUX_KURTOSIS", "Prediction"]])
@@ -1121,9 +1121,9 @@ elif page == "ML Prediction":
                 time.sleep(0.02)  # Simulate processing time
                 progress_bar.progress(percent_complete + 1)
             if prediction == 1:
-                st.success(f"🌍 **Exoplanet detected using {selected_model}!**")
+                st.success(f" **Exoplanet detected using {selected_model}!**")
             else:
-                st.error(f"🚀 No exoplanet detected using {selected_model}.")
+                st.error(f" No exoplanet detected using {selected_model}.")
 
 
 
